@@ -60,7 +60,7 @@ url = { workspace = true }
 same-file = "1"
 
 [features]
-default = ["rust-tls"]
+default = ["rust-tls", "indexing-zh"]
 rust-tls = ["reqwest/rustls-tls", "link_checker/rust-tls", "templates/rust-tls"]
 native-tls = ["reqwest/default-tls", "link_checker/native-tls", "templates/native-tls"]
 indexing-zh = ["search/indexing-zh"]
