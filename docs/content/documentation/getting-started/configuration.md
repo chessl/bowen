@@ -168,6 +168,10 @@ bottom_footnotes = false
 # Visual appearance depends on theme-level support; refer to your theme's documentation for more information.
 github_alerts = false
 
+# When set to "true", `$...$` is rendered as inline Typst MathML and `$$...$$`
+# is rendered as block Typst MathML.
+typst_math = false
+
 # This determines whether to insert a link for each header like the ones you can see on this site if you hover over
 # a header.
 # The default template can be overridden by creating an `anchor-link.html` file in the `templates` directory.

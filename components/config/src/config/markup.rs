@@ -162,6 +162,8 @@ pub struct Markdown {
     pub insert_anchor_links: InsertAnchor,
     /// Whether to enable GitHub-style alerts
     pub github_alerts: bool,
+    /// Whether to render `$...$` and `$$...$$` as Typst MathML
+    pub typst_math: bool,
 }
 
 impl Markdown {
@@ -233,6 +235,7 @@ impl Default for Markdown {
             lazy_async_image: false,
             insert_anchor_links: InsertAnchor::None,
             github_alerts: false,
+            typst_math: false,
         }
     }
 }

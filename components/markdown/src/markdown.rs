@@ -22,6 +22,7 @@ use utils::types::InsertAnchor;
 
 use self::cmark::{Event, LinkType, Options, Parser, Tag, TagEnd};
 use crate::shortcode::{SHORTCODE_PLACEHOLDER, Shortcode};
+use crate::typst_math::{TYPST_MATH_PLACEHOLDER, TypstMath};
 
 const CONTINUE_READING: &str = "<span id=\"continue-reading\"></span>";
 const SUMMARY_CUTOFF_TEMPLATE: &str = "summary-cutoff.html";
@@ -450,41 +451,69 @@ pub fn markdown_to_html(
         opts.insert(Options::ENABLE_GFM);
     }
 
+    let (content, typst_math) = if context.config.markdown.typst_math && content.contains('$') {
+        let (content, math) = crate::typst_math::extract(content, opts)?;
+        (content.into(), math)
+    } else {
+        (content.into(), Vec::new())
+    };
+    let content: cmark::CowStr<'_> = content;
+    let content = content.as_ref();
+
     // we reverse their order so we can pop them easily in order
     let mut html_shortcodes: Vec<_> = html_shortcodes.into_iter().rev().collect();
     let mut next_shortcode = html_shortcodes.pop();
-    let contains_shortcode = |txt: &str| -> bool { txt.contains(SHORTCODE_PLACEHOLDER) };
+    let mut typst_math: Vec<_> = typst_math.into_iter().rev().collect();
+    let mut next_typst_math = typst_math.pop();
+    let contains_placeholder = |txt: &str| -> bool {
+        txt.contains(SHORTCODE_PLACEHOLDER) || txt.contains(TYPST_MATH_PLACEHOLDER)
+    };
 
     {
         let mut events = Vec::new();
-        macro_rules! render_shortcodes {
+        macro_rules! push_text_or_html {
+            ($is_text:expr, $content:expr) => {{
+                let content: cmark::CowStr<'_> = $content.to_string().into();
+                events.push(if $is_text {
+                    if inside_attribute {
+                        let mut buffer = "".to_string();
+                        escape_html(&mut buffer, content.as_ref()).unwrap();
+                        Event::Html(buffer.into())
+                    } else {
+                        Event::Text(content)
+                    }
+                } else {
+                    Event::Html(content)
+                });
+            }};
+        }
+
+        macro_rules! render_placeholders {
             ($is_text:expr, $text:expr, $range:expr) => {
                 let orig_range_start = $range.start;
                 loop {
-                    if let Some(ref shortcode) = next_shortcode {
-                        if !$range.contains(&shortcode.span.start) {
-                            break;
-                        }
-                        let sc_span = shortcode.span.clone();
+                    let next_shortcode_start = next_shortcode.as_ref().and_then(|shortcode| {
+                        $range.contains(&shortcode.span.start).then_some(shortcode.span.start)
+                    });
+                    let next_typst_math_start = next_typst_math.as_ref().and_then(|math| {
+                        $range.contains(&math.span.start).then_some(math.span.start)
+                    });
+
+                    let render_shortcode = match (next_shortcode_start, next_typst_math_start) {
+                        (Some(shortcode_start), Some(math_start)) => shortcode_start <= math_start,
+                        (Some(_), None) => true,
+                        (None, Some(_)) => false,
+                        (None, None) => break,
+                    };
+
+                    if render_shortcode {
+                        let sc_span = next_shortcode.as_ref().unwrap().span.clone();
 
                         // we have some text before the shortcode, push that first
                         if $range.start != sc_span.start {
-                            let content: cmark::CowStr<'_> =
-                                $text[($range.start - orig_range_start)
-                                    ..(sc_span.start - orig_range_start)]
-                                    .to_string()
-                                    .into();
-                            events.push(if $is_text {
-                                if inside_attribute {
-                                    let mut buffer = "".to_string();
-                                    escape_html(&mut buffer, content.as_ref()).unwrap();
-                                    Event::Html(buffer.into())
-                                } else {
-                                    Event::Text(content)
-                                }
-                            } else {
-                                Event::Html(content)
-                            });
+                            let content = &$text[($range.start - orig_range_start)
+                                ..(sc_span.start - orig_range_start)];
+                            push_text_or_html!($is_text, content);
                             $range.start = sc_span.start;
                         }
 
@@ -504,13 +533,26 @@ pub fn markdown_to_html(
                         continue;
                     }
 
-                    break;
+                    let math_span = next_typst_math.as_ref().unwrap().span.clone();
+
+                    if $range.start != math_span.start {
+                        let content = &$text[($range.start - orig_range_start)
+                            ..(math_span.start - orig_range_start)];
+                        push_text_or_html!($is_text, content);
+                        $range.start = math_span.start;
+                    }
+
+                    let math: TypstMath = next_typst_math.take().unwrap();
+                    events.push(Event::Html(math.html.into()));
+                    $range.start += TYPST_MATH_PLACEHOLDER.len();
+                    next_typst_math = typst_math.pop();
+                    continue;
                 }
 
                 if !$range.is_empty() {
                     // The $range value is for the whole document, not for this slice of text
-                    let content = $text[($range.start - orig_range_start)..].to_string().into();
-                    events.push(if $is_text { Event::Text(content) } else { Event::Html(content) });
+                    let content = &$text[($range.start - orig_range_start)..];
+                    push_text_or_html!($is_text, content);
                 }
             };
         }
@@ -519,10 +561,10 @@ pub fn markdown_to_html(
             match event {
                 Event::Text(text) => {
                     if code_block.is_some() {
-                        if contains_shortcode(text.as_ref()) {
+                        if contains_placeholder(text.as_ref()) {
                             // mark the start of the code block events
                             let stack_start = events.len();
-                            render_shortcodes!(true, text, range);
+                            render_placeholders!(true, text, range);
                             // after rendering the shortcodes we will collect all the text events
                             // and re-render them as code blocks
                             for event in events[stack_start..].iter() {
@@ -550,7 +592,7 @@ pub fn markdown_to_html(
                             text
                         };
 
-                        if !contains_shortcode(text.as_ref()) {
+                        if !contains_placeholder(text.as_ref()) {
                             if inside_attribute {
                                 let mut buffer = "".to_string();
                                 escape_html(&mut buffer, text.as_ref()).unwrap();
@@ -561,7 +603,7 @@ pub fn markdown_to_html(
                             continue;
                         }
 
-                        render_shortcodes!(true, text, range);
+                        render_placeholders!(true, text, range);
                     }
                 }
                 Event::Start(Tag::CodeBlock(ref kind)) => {
@@ -716,7 +758,16 @@ pub fn markdown_to_html(
                     // track of the shortcodes to come and compare it to that.
                     if let Some(ref next_shortcode) = next_shortcode
                         && next_shortcode.span.start == range.start
-                        && next_shortcode.span.len() == content[range].trim().len()
+                        && next_shortcode.span.len() == content[range.clone()].trim().len()
+                    {
+                        stop_next_end_p = true;
+                        events.push(Event::Html("".into()));
+                        continue;
+                    }
+                    if let Some(ref next_typst_math) = next_typst_math
+                        && next_typst_math.block
+                        && next_typst_math.span.start == range.start
+                        && next_typst_math.span.len() == content[range.clone()].trim().len()
                     {
                         stop_next_end_p = true;
                         events.push(Event::Html("".into()));
@@ -740,9 +791,9 @@ pub fn markdown_to_html(
                     events.push(Event::Html(CONTINUE_READING.into()));
                 }
                 Event::Html(text) | Event::InlineHtml(text)
-                    if contains_shortcode(text.as_ref()) =>
+                    if contains_placeholder(text.as_ref()) =>
                 {
-                    render_shortcodes!(false, text, range);
+                    render_placeholders!(false, text, range);
                 }
                 _ => events.push(event),
             }

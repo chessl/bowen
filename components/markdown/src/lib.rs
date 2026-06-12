@@ -1,6 +1,7 @@
 mod context;
 mod markdown;
 mod shortcode;
+mod typst_math;
 
 use shortcode::{extract_shortcodes, insert_md_shortcodes};
 

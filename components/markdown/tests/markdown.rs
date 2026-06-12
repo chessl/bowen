@@ -165,6 +165,70 @@ term
 }
 
 #[test]
+fn can_render_typst_inline_math() {
+    let mut config = Config::default_for_test();
+    config.markdown.typst_math = true;
+    let body = common::render_with_config("$x + y$", config).unwrap().body;
+
+    assert!(body.contains("<math>"));
+    assert!(body.contains("</math>"));
+    assert!(!body.contains("display=\"block\""));
+    assert!(!body.contains("<svg"));
+    assert!(!body.contains("$x + y$"));
+}
+
+#[test]
+fn can_render_typst_block_math() {
+    let mut config = Config::default_for_test();
+    config.markdown.typst_math = true;
+    let body = common::render_with_config("$$x + y$$", config).unwrap().body;
+
+    assert!(body.contains("<math display=\"block\">"));
+    assert!(body.contains("</math>"));
+    assert!(!body.contains("<svg"));
+    assert!(!body.contains("$$x + y$$"));
+}
+
+#[test]
+fn does_not_render_typst_math_without_config() {
+    let body = common::render("$x + y$").unwrap().body;
+
+    assert_eq!(body, "<p>$x + y$</p>\n");
+}
+
+#[test]
+fn does_not_render_typst_math_in_code() {
+    let mut config = Config::default_for_test();
+    config.markdown.typst_math = true;
+    let body = common::render_with_config("`$x$`\n\n```typst\n$x$\n```", config).unwrap().body;
+
+    assert!(!body.contains("<math"));
+    assert!(body.contains("<code>$x$</code>"));
+    assert!(body.contains("<pre><code data-lang=\"typst\">$x$\n</code></pre>"));
+}
+
+#[test]
+fn does_not_render_typst_inline_math_across_lines() {
+    let mut config = Config::default_for_test();
+    config.markdown.typst_math = true;
+    let body = common::render_with_config(
+        r#"
+| Tables   |  Cool |
+| -------- | ----: |
+| col 3 is | $1600 |
+| col 2 is |   $12 |
+"#,
+        config,
+    )
+    .unwrap()
+    .body;
+
+    assert!(!body.contains("<math"));
+    assert!(body.contains("$1600"));
+    assert!(body.contains("$12"));
+}
+
+#[test]
 fn can_use_external_links_class() {
     let mut config = Config::default_for_test();
 

@@ -1,0 +1,32 @@
+disallowed-methods = [
+  { path = "std::collections::HashMap::new", reason = "use `HashMap::with_capacity` instead." },
+  { path = "std::string::String::new", reason = "use `String::with_capacity` instead." },
+  { path = "std::vec::Vec::new", reason = "use `Vec::with_capacity` instead." },
+  { path = "std::thread::spawn", reason = "use `std::thread::scope` instead, see https://corrode.dev/blog/sharp-edges-in-rust-std/" },
+  { path = "serde_json::from_reader", reason = "`from_reader` is extremely slow, see https://github.com/serde-rs/json/issues/160." },
+]
+
+disallowed-types = [
+  { path = "once_cell::sync::OnceCell", reason = "use `std::sync::OnceLock` instead." },
+  { path = "once_cell::unsync::OnceCell", reason = "use `std::cell::OnceCell` instead." },
+  { path = "once_cell::sync::Lazy", reason = "use `std::sync::LazyLock` instead." },
+  { path = "once_cell::unsync::Lazy", reason = "use `std::sync::LazyCell` instead." },
+]
+
+enforced-import-renames = [
+  { path = "serde_json::from_slice", rename = "from_json_slice" },
+  { path = "serde_json::from_str", rename = "from_json_str" },
+  { path = "serde_json::from_value", rename = "from_json_value" },
+  { path = "serde_json::to_value", rename = "to_json_value" },
+  { path = "serde_json::value::to_raw_value", rename = "to_raw_json_value" },
+  { path = "serde_json::value::RawValue", rename = "RawJsonValue" },
+  { path = "serde_json::Value", rename = "JsonValue" },
+]
+
+disallowed-macros = [
+  { path = "std::format", reason = "use `String::push_str` instead." },
+  { path = "lazy_static::lazy_static", reason = "use `std::sync::LazyLock` instead." },
+]
+
+allow-unwrap-in-tests = true
+allow-expect-in-tests = true
