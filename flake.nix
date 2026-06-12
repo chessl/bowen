@@ -48,8 +48,74 @@
         nixpkgs.lib.genAttrs supportedSystems (
           system: f { pkgs = import nixpkgs { inherit overlays system; }; }
         );
+      cargoToml = builtins.fromTOML (builtins.readFile ./Cargo.toml);
+      mkBowenPackage =
+        pkgs:
+        let
+          rustPlatform = pkgs.makeRustPlatform {
+            cargo = pkgs.rustToolchain;
+            rustc = pkgs.rustToolchain;
+          };
+        in
+        rustPlatform.buildRustPackage {
+          pname = "bowen";
+          version = cargoToml.package.version;
+          src = ./.;
+
+          cargoLock.lockFile = ./Cargo.lock;
+          cargoBuildFlags = [
+            "--bin"
+            "bowen"
+          ];
+
+          nativeBuildInputs = with pkgs; [
+            pkg-config
+          ];
+
+          buildInputs =
+            with pkgs;
+            [
+              openssl
+            ]
+            ++ lib.optionals stdenv.isDarwin [
+              libiconv
+              apple-sdk
+            ];
+
+          doCheck = false;
+
+          meta = {
+            description = cargoToml.package.description;
+            mainProgram = "bowen";
+          };
+        };
     in
     {
+      packages = forEachSupportedSystem (
+        { pkgs }:
+        let
+          bowen = mkBowenPackage pkgs;
+        in
+        {
+          default = bowen;
+          bowen = bowen;
+        }
+      );
+
+      apps = forEachSupportedSystem (
+        { pkgs }:
+        let
+          system = pkgs.stdenv.hostPlatform.system;
+        in
+        {
+          default = {
+            type = "app";
+            program = "${self.packages.${system}.default}/bin/bowen";
+            meta.description = cargoToml.package.description;
+          };
+        }
+      );
+
       devShells = forEachSupportedSystem (
         { pkgs }: {
           default = pkgs.mkShell {
@@ -67,17 +133,6 @@
                 cargo-wizard
                 rust-analyzer
                 bacon
-
-                # profiling
-                gnuplot
-                cargo-flamegraph
-                samply
-
-                # benches
-                oha
-
-                # debug
-                socat
 
                 # unittest
                 cargo-nextest
