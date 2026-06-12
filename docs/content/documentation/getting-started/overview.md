@@ -5,7 +5,7 @@ weight = 5
 
 ## Bowen at a Glance
 
-Bowen is a fork of [Zola](https://github.com/getzola/zola) 0.22.1 that adds Typst-backed math rendering support.
+Bowen is a fork of [Zola](https://github.com/getzola/zola) 0.22.1 that adds Typst-backed math rendering support and optional D2 diagram rendering.
 It is a static site generator (SSG), similar to [Hugo](https://gohugo.io/), [Pelican](https://blog.getpelican.com/), and [Jekyll](https://jekyllrb.com/) (for a comprehensive list of SSGs, please see [Jamstack](https://jamstack.org/generators)). It is written in [Rust](https://www.rust-lang.org/) and uses the [Tera](https://keats.github.io/tera/) template engine, which is similar to [Jinja2](https://jinja.palletsprojects.com/en/2.10.x/), [Django templates](https://docs.djangoproject.com/en/2.2/topics/templates/), [Liquid](https://shopify.github.io/liquid/), and [Twig](https://twig.symfony.com/).
 
 Content is written in [CommonMark](https://commonmark.org/), a strongly defined, highly compatible specification of [Markdown](https://www.markdownguide.org/). Bowen uses [pulldown-cmark](https://github.com/raphlinus/pulldown-cmark#pulldown-cmark) to parse markdown files. The goal of this library is 100% compliance with the CommonMark spec. It adds a few additional features such as parsing footnotes, Github flavored tables, Github flavored task lists and strikethrough.

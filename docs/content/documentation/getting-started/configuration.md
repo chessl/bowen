@@ -172,6 +172,11 @@ github_alerts = false
 # is rendered as block Typst MathML.
 typst_math = false
 
+# When set to "true", fenced code blocks with the `d2` language are rendered as inline SVG diagrams.
+# See the D2 diagrams documentation for usage details.
+# Use `d2,render=false` on a code block to keep it rendered as source.
+render_d2 = false
+
 # This determines whether to insert a link for each header like the ones you can see on this site if you hover over
 # a header.
 # The default template can be overridden by creating an `anchor-link.html` file in the `templates` directory.

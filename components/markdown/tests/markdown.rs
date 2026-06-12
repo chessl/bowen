@@ -208,6 +208,58 @@ fn does_not_render_typst_math_in_code() {
 }
 
 #[test]
+fn can_render_d2_code_fence_when_enabled() {
+    let config = Config::parse(
+        r#"
+base_url = "https://example.com"
+
+[markdown]
+render_d2 = true
+
+[markdown.highlighting]
+theme = "github-dark"
+error_on_missing_language = true
+"#,
+    )
+    .unwrap();
+    let body = common::render_with_config("```d2\na -> b\n```", config).unwrap().body;
+
+    assert!(body.contains(r#"<div class="d2-diagram">"#), "{body}");
+    assert!(body.contains("<svg "), "{body}");
+    assert!(body.contains(">a<"), "{body}");
+    assert!(body.contains(">b<"), "{body}");
+    assert!(!body.contains("<pre><code"), "{body}");
+    assert!(!body.contains("<?xml"), "{body}");
+}
+
+#[test]
+fn does_not_render_d2_code_fence_without_config() {
+    let body = common::render("```d2\na -> b\n```").unwrap().body;
+
+    assert_eq!(body, "<pre><code data-lang=\"d2\">a -&gt; b\n</code></pre>\n");
+}
+
+#[test]
+fn can_leave_d2_code_fence_unrendered_with_metadata() {
+    let config = Config::parse(
+        r#"
+base_url = "https://example.com"
+
+[markdown]
+render_d2 = true
+
+[markdown.highlighting]
+theme = "github-dark"
+error_on_missing_language = true
+"#,
+    )
+    .unwrap();
+    let body = common::render_with_config("```d2,render=false\na -> b\n```", config).unwrap().body;
+
+    assert_eq!(body, "<pre><code data-lang=\"d2\">a -&gt; b\n</code></pre>\n");
+}
+
+#[test]
 fn does_not_render_typst_inline_math_across_lines() {
     let mut config = Config::default_for_test();
     config.markdown.typst_math = true;

@@ -7,6 +7,7 @@ include = ["src/**/*"]
 [dependencies]
 pest = "2"
 pest_derive = "2"
+d2-little = { workspace = true }
 gh-emoji = { workspace = true }
 once_cell = { workspace = true }
 pulldown-cmark = { workspace = true }

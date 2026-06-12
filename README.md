@@ -8,7 +8,8 @@ It remains a fast static site generator in a single binary with everything built
 For inherited Zola behavior, see the [Zola Documentation](https://www.getzola.org/documentation/getting-started/overview/)
 or the [docs/content](docs/content) folder in this repository.
 
-This fork is derived from Zola 0.22.1 and adds Typst-backed math rendering support.
+This fork is derived from Zola 0.22.1 and adds Typst-backed math rendering support plus optional
+D2 diagram rendering.
 Project-specific behavior should be documented here as `bowen` diverges from upstream.
 
 ## Features
@@ -16,6 +17,7 @@ Project-specific behavior should be documented here as `bowen` diverges from ups
 - [Single binary](https://www.getzola.org/documentation/getting-started/cli-usage/)
 - [Syntax highlighting](https://www.getzola.org/documentation/content/syntax-highlighting/)
 - Typst-backed math rendering
+- [D2 diagrams rendered to inline SVG](docs/content/documentation/content/d2-diagrams.md)
 - [Sass compilation](https://www.getzola.org/documentation/content/sass/)
 - Assets co-location
 - [Multilingual site support](https://www.getzola.org/documentation/content/multilingual/) (Basic currently)

@@ -27,6 +27,9 @@ use crate::typst_math::{TYPST_MATH_PLACEHOLDER, TypstMath};
 const CONTINUE_READING: &str = "<span id=\"continue-reading\"></span>";
 const SUMMARY_CUTOFF_TEMPLATE: &str = "summary-cutoff.html";
 const ANCHOR_LINK_TEMPLATE: &str = "anchor-link.html";
+const D2_LANGUAGE: &str = "d2";
+const D2_RENDER_METADATA: &str = "render";
+const D2_DIAGRAM_CLASS: &str = "d2-diagram";
 static EMOJI_REPLACER: Lazy<EmojiReplacer> = Lazy::new(EmojiReplacer::new);
 
 /// Set as a regex to help match some extra cases. This way, spaces and case don't matter.
@@ -37,6 +40,54 @@ static MORE_DIVIDER_RE: Lazy<Regex> = Lazy::new(|| {
         .build()
         .unwrap()
 });
+
+fn should_render_d2(code: &ParsedFence, context: &RenderContext<'_>) -> bool {
+    context.config.markdown.render_d2
+        && code.lang.eq_ignore_ascii_case(D2_LANGUAGE)
+        && code.rest.get(D2_RENDER_METADATA).is_none_or(|value| !is_false_metadata_value(value))
+}
+
+fn should_render_d2_source(code: &ParsedFence, context: &RenderContext<'_>) -> bool {
+    context.config.markdown.render_d2
+        && code.lang.eq_ignore_ascii_case(D2_LANGUAGE)
+        && code.rest.get(D2_RENDER_METADATA).is_some_and(|value| is_false_metadata_value(value))
+}
+
+fn is_false_metadata_value(value: &str) -> bool {
+    matches!(value.trim().to_ascii_lowercase().as_str(), "false" | "0" | "no")
+}
+
+fn render_d2_diagram(source: &str, path: Option<&str>) -> Result<String> {
+    let svg = d2_little::d2_to_svg(source).map_err(|e| {
+        let location = path.map_or_else(String::new, |p| format!(" in {p:?}"));
+        Error::msg(format!("Failed to render D2 diagram{location}: {e}"))
+    })?;
+    let svg = String::from_utf8(svg).context("D2 renderer produced invalid UTF-8")?;
+    let svg = strip_xml_declaration(&svg);
+
+    Ok(format!("<div class=\"{D2_DIAGRAM_CLASS}\">\n{svg}\n</div>\n"))
+}
+
+fn strip_xml_declaration(svg: &str) -> &str {
+    let svg = svg.trim_start();
+    if let Some(rest) = svg.strip_prefix("<?xml")
+        && let Some(end) = rest.find("?>")
+    {
+        return rest[end + 2..].trim_start();
+    }
+    svg
+}
+
+fn render_plain_code_block(code: &ParsedFence, content: &str) -> Result<String> {
+    let lang = if code.lang != giallo::PLAIN_GRAMMAR_NAME {
+        format!(r#" data-lang="{}""#, code.lang)
+    } else {
+        String::new()
+    };
+    let mut escaped = String::new();
+    escape_html(&mut escaped, content)?;
+    Ok(format!("<pre><code{lang}>{escaped}</code></pre>\n"))
+}
 
 static FOOTNOTES_RE: Lazy<Regex> = Lazy::new(|| {
     Regex::new(r#"<sup class="footnote-reference"( id=\s*.*?)?><a href=\s*.*?>\s*.*?</a></sup>"#)
@@ -617,7 +668,11 @@ pub fn markdown_to_html(
                 }
                 Event::End(TagEnd::CodeBlock) => {
                     let html = if let Some(code) = code_block.take() {
-                        if let Some(hl) = &context.config.markdown.highlighting {
+                        if should_render_d2(&code, context) {
+                            render_d2_diagram(&code_block_content, path)?
+                        } else if should_render_d2_source(&code, context) {
+                            render_plain_code_block(&code, &code_block_content)?
+                        } else if let Some(hl) = &context.config.markdown.highlighting {
                             if !hl.registry.contains_grammar(&code.lang) {
                                 let location = if let Some(p) = path {
                                     format!(" in {p:?}")
@@ -648,14 +703,7 @@ pub fn markdown_to_html(
                             };
                             renderer.render(&highlighted, &code.options)
                         } else {
-                            let lang = if code.lang != giallo::PLAIN_GRAMMAR_NAME {
-                                format!(r#" data-lang="{}""#, code.lang)
-                            } else {
-                                String::new()
-                            };
-                            let mut escaped = String::new();
-                            escape_html(&mut escaped, &code_block_content)?;
-                            format!("<pre><code{lang}>{escaped}</code></pre>\n")
+                            render_plain_code_block(&code, &code_block_content)?
                         }
                     } else {
                         unreachable!(

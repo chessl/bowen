@@ -351,6 +351,12 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "be5eb007b7cacc6c660343e96f650fedf4b5a77512399eb952ca6642cf8d13f7"
 
 [[package]]
+name = "base32"
+version = "0.5.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "022dfe9eb35f19ebbcb51e0b40a5ab759f46ad60cadf7297e0bd085afb50e076"
+
+[[package]]
 name = "base64"
 version = "0.22.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -480,6 +486,43 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "cdeb9d870516001442e364c5220d3574d2da8dc765554b4a617230d33fa58ef5"
 dependencies = [
  "objc2",
+]
+
+[[package]]
+name = "bowen"
+version = "0.1.0"
+dependencies = [
+ "ahash 0.8.12",
+ "anstream",
+ "anstyle",
+ "axum",
+ "clap 4.5.54",
+ "clap_complete",
+ "clap_mangen",
+ "console 0.1.0",
+ "ctrlc",
+ "env_logger 0.11.8",
+ "errors",
+ "globset",
+ "link_checker",
+ "log",
+ "mime",
+ "mime_guess",
+ "notify-debouncer-full",
+ "open",
+ "percent-encoding",
+ "relative-path",
+ "reqwest",
+ "same-file",
+ "search",
+ "serde_json",
+ "site",
+ "tauri-winres",
+ "templates",
+ "time",
+ "tokio",
+ "url",
+ "utils",
 ]
 
 [[package]]
@@ -973,7 +1016,7 @@ dependencies = [
  "errors",
  "globset",
  "lexical-sort",
- "markdown",
+ "markdown 0.1.0",
  "once_cell",
  "rayon",
  "regex",
@@ -1182,6 +1225,26 @@ dependencies = [
  "dispatch2",
  "nix",
  "windows-sys 0.61.2",
+]
+
+[[package]]
+name = "d2-little"
+version = "0.7.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "91e9de4e1c31e3024564255281c3240bc486bc10fbfa25fbae49740b2f9258ae"
+dependencies = [
+ "base32",
+ "base64",
+ "fancy-regex 0.14.0",
+ "log",
+ "markdown 1.0.0",
+ "regex",
+ "roxmltree 0.20.0",
+ "serde",
+ "serde_json",
+ "ttf-parser 0.21.1",
+ "unicode-segmentation",
+ "unicode-width 0.1.14",
 ]
 
 [[package]]
@@ -1553,6 +1616,17 @@ checksum = "8b3e85d14d419ba3e1db925519461c0d17a49bdd2d67ea6316fa965ca7acdf74"
 
 [[package]]
 name = "fancy-regex"
+version = "0.14.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "6e24cb5a94bcae1e5408b0effca5cd7172ea3c5755049c5f3af4cd283a165298"
+dependencies = [
+ "bit-set",
+ "regex-automata",
+ "regex-syntax",
+]
+
+[[package]]
+name = "fancy-regex"
 version = "0.16.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "998b056554fbe42e03ae0e152895cd1a7e1002aec800fdc6635d20270260c46f"
@@ -1682,7 +1756,7 @@ dependencies = [
  "log",
  "slotmap",
  "tinyvec",
- "ttf-parser",
+ "ttf-parser 0.25.1",
 ]
 
 [[package]]
@@ -3218,6 +3292,7 @@ version = "0.1.0"
 dependencies = [
  "config",
  "console 0.1.0",
+ "d2-little",
  "errors",
  "gh-emoji",
  "giallo",
@@ -3235,6 +3310,15 @@ dependencies = [
  "typst-html",
  "typst-kit",
  "utils",
+]
+
+[[package]]
+name = "markdown"
+version = "1.0.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "a5cab8f2cadc416a82d2e783a1946388b31654d391d1c7d92cc1f03e295b1deb"
+dependencies = [
+ "unicode-id",
 ]
 
 [[package]]
@@ -3824,7 +3908,7 @@ dependencies = [
  "textwrap",
  "thiserror 2.0.18",
  "unicode-segmentation",
- "unicode-width",
+ "unicode-width 0.2.2",
 ]
 
 [[package]]
@@ -5222,7 +5306,7 @@ dependencies = [
  "core_maths",
  "log",
  "smallvec",
- "ttf-parser",
+ "ttf-parser 0.25.1",
  "unicode-bidi-mirroring",
  "unicode-ccc",
  "unicode-properties",
@@ -5779,7 +5863,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "656b45c05d95a5704399aeef6bd0ddec7b2b3531b7c9e900abbf7c4d2190c925"
 dependencies = [
  "bincode",
- "fancy-regex",
+ "fancy-regex 0.16.2",
  "flate2",
  "fnv",
  "once_cell",
@@ -5845,7 +5929,7 @@ dependencies = [
  "csv",
  "errors",
  "imageproc",
- "markdown",
+ "markdown 0.1.0",
  "mockito",
  "nom-bibtex",
  "num-format",
@@ -5946,7 +6030,7 @@ checksum = "c13547615a44dc9c452a8a534638acdf07120d4b6847c8178705da06306a3057"
 dependencies = [
  "smawk",
  "unicode-linebreak",
- "unicode-width",
+ "unicode-width 0.2.2",
 ]
 
 [[package]]
@@ -6303,6 +6387,12 @@ checksum = "e421abadd41a4225275504ea4d6566923418b7f05506fbc9c0fe86ba7396114b"
 
 [[package]]
 name = "ttf-parser"
+version = "0.21.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "2c591d83f69777866b9126b24c6dd9a18351f177e49d625920d19f989fd31cf8"
+
+[[package]]
+name = "ttf-parser"
 version = "0.25.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "d2df906b07856748fa3f6e0ad0cbaa047052d4a7dd609e231c4f72cee8c36f31"
@@ -6466,7 +6556,7 @@ dependencies = [
  "rustc-hash",
  "rustybuzz",
  "smallvec",
- "ttf-parser",
+ "ttf-parser 0.25.1",
  "typst-assets",
  "typst-library",
  "typst-macros",
@@ -6527,7 +6617,7 @@ dependencies = [
  "syntect",
  "time",
  "toml 0.8.23",
- "ttf-parser",
+ "ttf-parser 0.25.1",
  "two-face",
  "typed-arena",
  "typst-assets",
@@ -6593,7 +6683,7 @@ dependencies = [
  "itoa",
  "rustc-hash",
  "ryu",
- "ttf-parser",
+ "ttf-parser 0.25.1",
  "typst-assets",
  "typst-layout",
  "typst-library",
@@ -6726,6 +6816,12 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "ce61d488bcdc9bc8b5d1772c404828b17fc481c0a582b5581e95fb233aef503e"
 
 [[package]]
+name = "unicode-id"
+version = "0.3.6"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "70ba288e709927c043cbe476718d37be306be53fb1fafecd0dbe36d072be2580"
+
+[[package]]
 name = "unicode-id-start"
 version = "1.4.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -6781,6 +6877,12 @@ name = "unicode-vo"
 version = "0.1.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "b1d386ff53b415b7fe27b50bb44679e2cc4660272694b7b6f3326d8480823a94"
+
+[[package]]
+name = "unicode-width"
+version = "0.1.14"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "7dd6e30e90baa6f72411720665d41d89b9a3d039dc45b8faea1ddd07f617f6af"
 
 [[package]]
 name = "unicode-width"
@@ -6840,7 +6942,7 @@ dependencies = [
  "strict-num",
  "svgtypes",
  "tiny-skia-path",
- "ttf-parser",
+ "ttf-parser 0.25.1",
  "unicode-bidi",
  "unicode-script",
  "unicode-vo",
@@ -7653,43 +7755,6 @@ name = "zmij"
 version = "1.0.16"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "dfcd145825aace48cff44a8844de64bf75feec3080e0aa5cdbde72961ae51a65"
-
-[[package]]
-name = "bowen"
-version = "0.1.0"
-dependencies = [
- "ahash 0.8.12",
- "anstream",
- "anstyle",
- "axum",
- "clap 4.5.54",
- "clap_complete",
- "clap_mangen",
- "console 0.1.0",
- "ctrlc",
- "env_logger 0.11.8",
- "errors",
- "globset",
- "link_checker",
- "log",
- "mime",
- "mime_guess",
- "notify-debouncer-full",
- "open",
- "percent-encoding",
- "relative-path",
- "reqwest",
- "same-file",
- "search",
- "serde_json",
- "site",
- "tauri-winres",
- "templates",
- "time",
- "tokio",
- "url",
- "utils",
-]
 
 [[package]]
 name = "zune-core"

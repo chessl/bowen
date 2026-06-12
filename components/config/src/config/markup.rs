@@ -164,6 +164,8 @@ pub struct Markdown {
     pub github_alerts: bool,
     /// Whether to render `$...$` and `$$...$$` as Typst MathML
     pub typst_math: bool,
+    /// Whether to render fenced `d2` code blocks as SVG diagrams
+    pub render_d2: bool,
 }
 
 impl Markdown {
@@ -236,6 +238,7 @@ impl Default for Markdown {
             insert_anchor_links: InsertAnchor::None,
             github_alerts: false,
             typst_math: false,
+            render_d2: false,
         }
     }
 }
