@@ -74,8 +74,8 @@ static SHOULD_COLOR_OUTPUT: LazyLock<anstream::ColorChoice> =
     LazyLock::new(|| anstream::AutoStream::choice(&std::io::stderr()));
 
 fn main() {
-    // ensure that logging uses the “info” level for anything in Zola by default
-    let env = Env::new().default_filter_or("zola=info");
+    // ensure that logging uses the “info” level for anything in Bowen by default
+    let env = Env::new().default_filter_or("bowen=info");
     env_logger::Builder::from_env(env)
         .format(|f, record| {
             use std::io::Write;

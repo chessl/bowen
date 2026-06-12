@@ -1,13 +1,10 @@
 [package]
-name = "zola"
-version = "0.22.1"
-authors = ["Vincent Prouillet <hello@vincentprouillet.com>"]
+name = "bowen"
+version = "0.1.0"
 edition = "2024"
 license = "EUPL-1.2"
 readme = "README.md"
 description = "A fast static site generator with everything built-in"
-homepage = "https://www.getzola.org"
-repository = "https://github.com/getzola/zola"
 keywords = ["static", "site", "generator", "blog"]
 
 include = ["src/**/*", "LICENSE", "README.md"]
@@ -20,7 +17,7 @@ tauri-winres = "0.3"
 time = "0.3"
 
 [[bin]]
-name = "zola"
+name = "bowen"
 
 [dependencies]
 clap = { version = "4", features = ["derive"] }
@@ -73,7 +70,7 @@ indexing-ja = ["search/indexing-ja"]
 members = ["components/*"]
 
 [workspace.package]
-version = "0.21.0"
+version = "0.1.0"
 
 [workspace.dependencies]
 # External dependencies
@@ -148,5 +145,5 @@ strip = true
 debug = 0
 
 [package.metadata.winres]
-OriginalFilename = "zola.exe"
-InternalName = "zola"
+OriginalFilename = "bowen.exe"
+InternalName = "bowen"

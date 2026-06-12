@@ -1,20 +1,21 @@
-# zola (né Gutenberg) <img src="docs/static/logos/Zola-logo-main-coffee.svg" align="right" alt="zola logo" width="30%"/>
+# bowen
 
-[![Build Status](https://dev.azure.com/getzola/zola/_apis/build/status/getzola.zola?branchName=master)](https://dev.azure.com/getzola/zola/_build/latest?definitionId=1&branchName=master)
-![GitHub all releases](https://img.shields.io/github/downloads/getzola/zola/total)
+`bowen` is a fork of [Zola](https://github.com/getzola/zola), starting its own release line at
+version 0.1.0.
 
-A fast static site generator in a single binary with everything built-in.
+It remains a fast static site generator in a single binary with everything built-in.
 
-To find out more see the [Zola Documentation](https://www.getzola.org/documentation/getting-started/overview/), look
-in the [docs/content](docs/content) folder of this repository or visit the [Zola community forum](https://zola.discourse.group).
+For inherited Zola behavior, see the [Zola Documentation](https://www.getzola.org/documentation/getting-started/overview/)
+or the [docs/content](docs/content) folder in this repository.
 
-This tool and its template engine [tera](https://keats.github.io/tera/) were born from an intense dislike of the (insane) Golang template engine and therefore of
-Hugo that I was using before for 6+ sites.
+This fork is derived from Zola 0.22.1 and adds Typst-backed math rendering support.
+Project-specific behavior should be documented here as `bowen` diverges from upstream.
 
-## List of features
+## Features
 
 - [Single binary](https://www.getzola.org/documentation/getting-started/cli-usage/)
 - [Syntax highlighting](https://www.getzola.org/documentation/content/syntax-highlighting/)
+- Typst-backed math rendering
 - [Sass compilation](https://www.getzola.org/documentation/content/sass/)
 - Assets co-location
 - [Multilingual site support](https://www.getzola.org/documentation/content/multilingual/) (Basic currently)
@@ -34,9 +35,12 @@ Hugo that I was using before for 6+ sites.
 
 ## License
 
-This project contains code under multiple licenses.
+`bowen` contains code under multiple licenses.
 
-Code introduced after version 0.22 is licensed under the EUPL-1.2.
-Code that existed prior to commit 3c9131db0d203640b6d5619ca1f75ce1e0d49d8f remains licensed under the MIT License, including in later versions of the project.
+Code derived from Zola is licensed under the EUPL-1.2. Code that existed in Zola prior to commit
+3c9131db0d203640b6d5619ca1f75ce1e0d49d8f remains licensed under the MIT License, including in
+later versions of this project.
+
+Additional `bowen` modifications are licensed under the EUPL-1.2 unless noted otherwise.
 
 See LICENSE and LICENSE-MIT for details.

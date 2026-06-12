@@ -966,7 +966,7 @@ dependencies = [
 
 [[package]]
 name = "content"
-version = "0.21.0"
+version = "0.1.0"
 dependencies = [
  "ahash 0.8.12",
  "config",
@@ -7655,8 +7655,8 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "dfcd145825aace48cff44a8844de64bf75feec3080e0aa5cdbde72961ae51a65"
 
 [[package]]
-name = "zola"
-version = "0.22.1"
+name = "bowen"
+version = "0.1.0"
 dependencies = [
  "ahash 0.8.12",
  "anstream",

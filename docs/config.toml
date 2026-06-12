@@ -1,6 +1,6 @@
 base_url = "https://www.getzola.org/"
-title = "Zola"
-description = "Everything you need to make a static site engine in one binary."
+title = "Bowen"
+description = "A Zola fork with Typst-backed math rendering support in one binary."
 
 compile_sass = true
 build_search_index = true

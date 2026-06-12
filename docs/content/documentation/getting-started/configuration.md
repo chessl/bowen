@@ -3,13 +3,13 @@ title = "Configuration"
 weight = 40
 +++
 
-The default configuration is sufficient to get Zola running locally but not more than that.
+The default configuration is sufficient to get Bowen running locally but not more than that.
 It follows the philosophy of paying for only what you need, almost everything is turned off by default.
 
 To change the configuration, edit the `zola.toml` file.
 If you are not familiar with TOML, have a look at [the TOML spec](https://github.com/toml-lang/toml).
 
-> The configuration file was previously named config.toml. Zola loads config.toml as a fallback if zola.toml does not exist. 
+> The configuration file was previously named config.toml. Bowen loads config.toml as a fallback if zola.toml does not exist.
 
 ⚠️ If you add keys to your `zola.toml`, you must pay attention to which TOML section it belongs to. A TOML section starts with a header, e.g. `[search]`, and ends at the next section or EOF.
 
@@ -24,7 +24,7 @@ Here are the current `zola.toml` sections:
 8. extra
 
 **Only the `base_url` variable is mandatory**. Everything else is optional. All configuration variables
-used by Zola as well as their default values are listed below:
+used by Bowen as well as their default values are listed below:
 
 ```toml
 # The base URL of the site; the only required configuration variable.
@@ -291,7 +291,7 @@ index_format = "elasticlunr_javascript"
 
 ## Slugification strategies
 
-By default, Zola will turn every path, taxonomies and anchors to a slug, an ASCII representation with no special characters.
+By default, Bowen will turn every path, taxonomies and anchors to a slug, an ASCII representation with no special characters.
 You can however change that strategy for each kind of item, if you want UTF-8 characters in your URLs for example. There are 3 strategies:
 
 - `on`: the default one, everything is turned into a slug

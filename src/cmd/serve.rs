@@ -230,7 +230,7 @@ async fn handle_websocket(mut socket: WebSocket, reload_tx: broadcast::Sender<St
                             let hello_response = json!({
                                 "command": "hello",
                                 "protocols": ["http://livereload.com/protocols/official-7"],
-                                "serverName": "Zola"
+                                "serverName": "Bowen"
                             })
                             .to_string();
 
@@ -311,7 +311,7 @@ async fn error_injection_middleware(response: Response) -> Response {
         }
 
         let html_error = format!(
-            r#"<div style="all:revert;position:fixed;display:flex;align-items:center;justify-content:center;background-color:rgb(0,0,0,0.5);top:0;right:0;bottom:0;left:0;"><div style="background-color:white;padding:0.5rem;border-radius:0.375rem;filter:drop-shadow(0,25px,25px,rgb(0,0,0/0.15));overflow-x:auto;"><p style="font-weight:700;color:black;font-size:1.25rem;margin:0;margin-bottom:0.5rem;">Zola Build Error:</p><pre style="padding:0.5rem;margin:0;border-radius:0.375rem;background-color:#363636;color:#CE4A2F;font-weight:700;">{error_str}</pre></div></div>"#
+            r#"<div style="all:revert;position:fixed;display:flex;align-items:center;justify-content:center;background-color:rgb(0,0,0,0.5);top:0;right:0;bottom:0;left:0;"><div style="background-color:white;padding:0.5rem;border-radius:0.375rem;filter:drop-shadow(0,25px,25px,rgb(0,0,0/0.15));overflow-x:auto;"><p style="font-weight:700;color:black;font-size:1.25rem;margin:0;margin-bottom:0.5rem;">Bowen Build Error:</p><pre style="padding:0.5rem;margin:0;border-radius:0.375rem;background-color:#363636;color:#CE4A2F;font-weight:700;">{error_str}</pre></div></div>"#
         );
 
         if is_html {
@@ -323,7 +323,7 @@ async fn error_injection_middleware(response: Response) -> Response {
             // Return a full HTML page with the error dialog for 404s
             // Include livereload.js so the page can receive reload messages when the error is fixed
             let html_page = format!(
-                r#"<!DOCTYPE html><html><head><title>Zola Build Error</title><script src="/livereload.js"></script></head><body>{html_error}</body></html>"#
+                r#"<!DOCTYPE html><html><head><title>Bowen Build Error</title><script src="/livereload.js"></script></head><body>{html_error}</body></html>"#
             );
             return Response::builder()
                 .header(header::CONTENT_TYPE, "text/html")
@@ -543,7 +543,7 @@ pub fn serve(
     let root_dir_str = root_dir.to_str().expect("Project root dir is not valid UTF-8.");
 
     // An array of (path, WatchMode, RecursiveMode) where the path is watched for changes,
-    // the WatchMode value indicates whether this path must exist for zola serve to operate,
+    // the WatchMode value indicates whether this path must exist for bowen serve to operate,
     // and the RecursiveMode value indicates whether to watch nested directories.
     let mut watch_this = vec![
         // The first entry is ultimately to watch config.toml in a more robust manner on Linux when

@@ -86,7 +86,7 @@ pub fn create_new_project(name: &str, force: bool) -> Result<()> {
         }
     }
 
-    console::info("Welcome to Zola!");
+    console::info("Welcome to Bowen!");
     console::info("Please answer a few questions to get started quickly.");
     console::info("Any choices made can be changed by modifying the `zola.toml` file later.");
 
@@ -109,9 +109,9 @@ pub fn create_new_project(name: &str, force: bool) -> Result<()> {
     ));
     println!();
     console::info(
-        "Get started by moving into the directory and using the built-in server: `zola serve`",
+        "Get started by moving into the directory and using the built-in server: `bowen serve`",
     );
-    println!("Visit https://www.getzola.org for the full documentation.");
+    println!("Visit https://www.getzola.org for the inherited Zola documentation.");
     Ok(())
 }
 

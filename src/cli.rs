@@ -9,7 +9,7 @@ use clap_complete::Shell;
     version,
     author,
     about,
-    after_help = "License: EUPL-1.2 <https://eupl.eu>, MIT for code existing before 0.22"
+    after_help = "License: EUPL-1.2 <https://eupl.eu>, MIT for upstream Zola code existing before 0.22"
 )]
 pub struct Cli {
     /// Directory to use as root of project
@@ -26,7 +26,7 @@ pub struct Cli {
 
 #[derive(Subcommand)]
 pub enum Command {
-    /// Create a new Zola project
+    /// Create a new Bowen project
     Init {
         /// Name of the project. Will create a new directory with that name in the current directory
         #[clap(default_value = ".")]
